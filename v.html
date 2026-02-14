@@ -2,109 +2,131 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Velocity | Access Point</title>
+    <title>Velocity | Access</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        
-        .velocity-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 24px; width: 100%; max-width: 420px; padding: 25px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); border-top: 2px solid var(--blue); }
+        body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center; }
 
-        .tabs { display: flex; background: #111; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; background: none; border: none; color: #555; padding: 10px; cursor: pointer; font-weight: 700; font-size: 11px; border-radius: 8px; text-transform: uppercase; }
-        .tab-btn.active { background: #1a1a1a; color: var(--blue); }
+        .logo { font-weight: 900; font-size: 2rem; margin-bottom: 50px; }
+        .logo span { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
 
-        /* Lista de Produtos */
-        .prod-item { background: #151515; border: 1px solid #222; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .prod-item:hover { border-color: var(--blue); transform: scale(1.02); }
-        .btn-open { background: var(--blue); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: 900; cursor: pointer; font-size: 10px; }
+        .container-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; }
 
-        /* Modal de Bloqueio */
-        #lock-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 100; justify-content: center; align-items: center; }
-        .lock-content { background: #0c0c0c; padding: 30px; border-radius: 20px; border: 1px solid #222; width: 350px; text-align: center; border-top: 2px solid var(--blue); }
-        .social-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; background: #111; border: 1px solid #222; }
-        .social-btn.done { border-color: #25D366; color: #25D366; }
-        .btn-dl { width: 100%; padding: 18px; border-radius: 10px; border: none; background: #222; color: #555; font-weight: 900; cursor: not-allowed; margin-top: 10px; }
-        .btn-dl.ready { background: #fff; color: #000; cursor: pointer; }
+        .card { 
+            background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; overflow: hidden; 
+            transition: 0.4s ease; border-top: 3px solid var(--blue); cursor: pointer;
+            animation: fadeIn 0.6s ease forwards; opacity: 0;
+        }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+        .card:hover { transform: translateY(-10px); border-color: var(--blue); box-shadow: 0 15px 40px rgba(0,162,255,0.2); }
+        .card img { width: 100%; height: 150px; object-fit: cover; background: #000; }
+        .card-body { padding: 20px; text-align: center; }
+        .btn-access { background: #fff; color: #000; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
+
+        /* MODAL DE BLOQUEIO */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-box { 
+            background: #080808; border: 1px solid #222; width: 380px; padding: 30px; border-radius: 24px; 
+            text-align: center; border-top: 4px solid var(--blue); animation: scaleUp 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+        }
+        @keyframes scaleUp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .step-btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; text-decoration: none; color: white; font-weight: bold; background: #111; border: 1px solid #333; transition: 0.3s; }
+        .step-btn.done { border-color: #25D366; color: #25D366; background: rgba(37, 211, 102, 0.05); }
+
+        .download-now { 
+            width: 100%; padding: 20px; border-radius: 12px; border: none; background: #222; 
+            color: #444; font-weight: 900; margin-top: 20px; cursor: not-allowed; text-transform: uppercase;
+        }
+        .download-now.active { background: var(--blue); color: white; cursor: pointer; box-shadow: 0 0 20px var(--blue); }
     </style>
 </head>
 <body>
 
-<div class="velocity-card">
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-p">Products</button>
-        <button class="tab-btn">Information</button>
-    </div>
+<div class="logo">VELO<span>CITY</span></div>
 
-    <div id="product-list">
+<div class="container-grid" id="grid"></div>
+
+<div id="modal">
+    <div class="modal-box">
+        <img id="mImg" style="width:100%; height:140px; border-radius:12px; object-fit:cover; margin-bottom:20px;">
+        <h2 id="mName" style="margin-bottom:25px; font-weight: 900;">PRODUCT</h2>
+        
+        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="step-btn" id="yt" onclick="check('yt')">SUBSCRIBE ON YOUTUBE</a>
+        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="step-btn" id="wa" onclick="check('wa')">JOIN WHATSAPP CHANNEL</a>
+        
+        <div id="status" style="display:none; color:var(--blue); font-weight:bold; margin:15px;">
+            Liberando em <span id="timer">10</span>s...
         </div>
-</div>
-
-<div id="lock-screen">
-    <div class="lock-content">
-        <h2 id="lockName" style="margin-bottom:20px; font-size:1.2rem;">Nome do Arquivo</h2>
-        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="social-btn" id="yt" onclick="validar('yt')">SUBSCRIBE ON YOUTUBE</a>
-        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="social-btn" id="wa" onclick="validar('wa')">JOIN WHATSAPP CHANNEL</a>
         
-        <div id="timer" style="display:none; color:var(--blue); margin:10px;">Wait <span id="sec">10</span>s...</div>
-        
-        <button id="finalBtn" class="btn-dl" disabled onclick="baixar()">DOWNLOAD NOW</button>
-        <button onclick="document.getElementById('lock-screen').style.display='none'" style="background:none; border:none; color:#444; margin-top:15px; cursor:pointer;">Fechar</button>
+        <button id="dlBtn" class="download-now" disabled onclick="go()">DOWNLOAD NOW</button>
+        <p onclick="closeM()" style="color:#444; margin-top:20px; cursor:pointer; font-size:11px; letter-spacing:1px;">CANCEL / CLOSE</p>
     </div>
 </div>
 
 <script>
     const params = new URLSearchParams(window.location.search);
-    const names = params.get('names').split('|');
-    const urls = params.get('urls').split('|');
-    let currentUrl = "";
+    const names = params.get('n')?.split('|') || [];
+    const links = params.get('l')?.split('|') || [];
+    const imgs = params.get('i')?.split('|') || [];
 
-    const list = document.getElementById('product-list');
-    names.forEach((name, index) => {
-        if(name) {
-            list.innerHTML += `
-                <div class="prod-item">
-                    <span style="font-weight:700; font-size:14px;">${name}</span>
-                    <button class="btn-open" onclick="openLock('${name}', '${urls[index]}')">DOWNLOAD</button>
+    let currentLink = "";
+    const grid = document.getElementById('grid');
+
+    names.forEach((name, i) => {
+        if(name && name !== "Sem Nome") {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.onclick = () => openM(name, links[i], imgs[i]);
+            div.innerHTML = `
+                <img src="${imgs[i] || 'https://via.placeholder.com/300x150'}">
+                <div class="card-body">
+                    <h3 style="font-size:16px;">${name}</h3>
+                    <button class="btn-access">DOWNLOAD</button>
                 </div>
             `;
+            grid.appendChild(div);
         }
     });
 
-    let checks = { yt: false, wa: false };
+    let st = { yt: false, wa: false };
 
-    function openLock(name, url) {
-        currentUrl = url;
-        document.getElementById('lockName').innerText = name;
-        document.getElementById('lock-screen').style.display = 'flex';
-        // Reset
-        checks = { yt: false, wa: false };
-        document.getElementById('yt').className = 'social-btn';
-        document.getElementById('wa').className = 'social-btn';
-        document.getElementById('finalBtn').className = 'btn-dl';
-        document.getElementById('finalBtn').disabled = true;
+    function openM(n, l, i) {
+        currentLink = l;
+        document.getElementById('mName').innerText = n;
+        document.getElementById('mImg').src = i || '';
+        document.getElementById('modal').style.display = 'flex';
+        st = { yt: false, wa: false };
+        document.getElementById('yt').className = 'step-btn';
+        document.getElementById('wa').className = 'step-btn';
+        document.getElementById('dlBtn').className = 'download-now';
+        document.getElementById('dlBtn').disabled = true;
     }
 
-    function validar(type) {
-        checks[type] = true;
+    function check(type) {
+        st[type] = true;
         document.getElementById(type).classList.add('done');
-        if(checks.yt && checks.wa) {
+        document.getElementById(type).innerText = "COMPLETED ✅";
+        if(st.yt && st.wa) {
             let s = 10;
-            document.getElementById('timer').style.display = 'block';
-            const count = setInterval(() => {
-                s--; document.getElementById('sec').innerText = s;
+            document.getElementById('status').style.display = 'block';
+            const counter = setInterval(() => {
+                s--; document.getElementById('timer').innerText = s;
                 if(s <= 0) {
-                    clearInterval(count);
-                    document.getElementById('timer').style.display = 'none';
-                    const b = document.getElementById('finalBtn');
-                    b.disabled = false; b.classList.add('ready');
+                    clearInterval(counter);
+                    document.getElementById('status').innerText = "UNLOCKED!";
+                    const b = document.getElementById('dlBtn');
+                    b.disabled = false; b.classList.add('active');
                 }
             }, 1000);
         }
     }
 
-    function baixar() { window.location.href = currentUrl; }
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+    function go() { window.location.href = currentLink; }
 </script>
 </body>
 </html>
