@@ -9,13 +9,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 40px; }
 
+        /* Botões com Som e Brilho Azul */
         .step-btn { 
             display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; 
             text-decoration: none; color: white; font-weight: bold; background: #111; 
-            border: 1px solid #333; transition: 0.3s; text-align: center;
+            border: 1px solid #333; transition: 0.3s; text-align: center; cursor: pointer;
         }
         .step-btn:hover { border-color: var(--blue); box-shadow: 0 0 20px var(--glow); transform: translateY(-3px); }
-        .step-btn:active { transform: scale(0.95); }
+        .step-btn:active { transform: scale(0.92); } /* Efeito Bolha */
         .step-btn.done { border-color: #25D366 !important; color: #25D366; }
 
         .download-now { 
@@ -26,15 +27,17 @@
             background: var(--blue); color: white; cursor: pointer; 
             box-shadow: 0 0 25px var(--blue); animation: pulse 1s infinite;
         }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         .container-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto; }
         .card { background: #0c0c0c; border: 1px solid #1a1a1a; border-radius: 20px; overflow: hidden; border-top: 3px solid var(--blue); cursor: pointer; transition: 0.3s; }
         .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px var(--glow); }
 
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-box { background: #080808; border: 1px solid #222; width: 400px; padding: 30px; border-radius: 25px; text-align: center; border-top: 4px solid var(--blue); }
-        #mMedia { width: 100%; height: 200px; border-radius: 15px; overflow: hidden; margin-bottom: 20px; background: #000; }
+        .modal-box { background: #080808; border: 1px solid #222; width: 400px; padding: 30px; border-radius: 28px; text-align: center; border-top: 4px solid var(--blue); animation: popUp 0.3s ease-out; }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        #mMedia { width: 100%; height: 230px; border-radius: 18px; overflow-y: auto; margin-bottom: 20px; background: #000; }
         iframe, img { width: 100%; height: 100%; object-fit: cover; border: none; }
     </style>
 </head>
@@ -49,17 +52,17 @@
         <h2 id="mName" style="margin-bottom:20px;">PRODUTO</h2>
         <a href="" target="_blank" class="step-btn" id="ytL" onclick="checkAct('yt')">SUBSCRIBE ON YOUTUBE</a>
         <a href="" target="_blank" class="step-btn" id="waL" onclick="checkAct('wa')">JOIN WHATSAPP</a>
-        <div id="timerDiv" style="display:none; color:var(--blue); margin:15px; font-weight:bold;">UNLOCKING IN <span id="sec">10</span>s...</div>
+        <div id="timerDiv" style="display:none; color:var(--blue); margin:15px; font-weight:bold;">Aguarde <span id="sec">10</span>s...</div>
         <button id="dlB" class="download-now" disabled onclick="downloadGo()">DOWNLOAD NOW</button>
-        <p onclick="closeM()" style="margin-top:20px; color:#555; cursor:pointer; font-size:12px;">[ CLOSE ]</p>
+        <p onclick="closeM()" style="margin-top:20px; color:#555; cursor:pointer; font-size:12px;">[ FECHAR ]</p>
     </div>
 </div>
 
 <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
 <script>
-    const clickSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-    const unlockSfx = new Audio('https://www.soundjay.com/communication/sounds/digital-beep-01.mp3');
-    function playClick() { clickSfx.currentTime = 0; clickSfx.play(); }
+    const popSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
+    const winSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/1103/1103-preview.mp3');
+    function playPop() { popSfx.currentTime = 0; popSfx.play(); }
 
     const p = new URLSearchParams(window.location.search);
     const names = p.get('n')?.split('|') || [];
@@ -71,22 +74,23 @@
     let currentL = "";
 
     function getMediaHtml(url) {
+        if(!url) return `<img src="https://via.placeholder.com/300x150">`;
+        if(url.includes('pinterest.com') || url.includes('pin.it')) {
+            return `<div style="background:#fff; padding:10px;"><a data-pin-do="embedPin" data-pin-width="medium" href="${url}"></a></div>`;
+        }
         if(url.includes('youtube.com') || url.includes('youtu.be')) {
             let id = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
             return `<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>`;
         }
-        if(url.includes('pinterest.com') || url.includes('pin.it')) {
-            return `<div style="background:#fff; height:100%; display:flex; align-items:center; justify-content:center;"><a data-pin-do="embedPin" href="${url}"></a></div>`;
-        }
-        return `<img src="${url || 'https://via.placeholder.com/300x150'}">`;
+        return `<img src="${url}">`;
     }
 
     names.forEach((n, i) => {
         if(!n) return;
         const d = document.createElement('div');
         d.className = 'card';
-        d.onclick = () => { playClick(); openM(n, links[i], media[i], ytUs[i], waUs[i]); };
-        d.innerHTML = `<div style="height:150px;">${getMediaHtml(media[i])}</div><div style="padding:20px;text-align:center;"><h3>${n}</h3></div>`;
+        d.onclick = () => { playPop(); openM(n, links[i], media[i], ytUs[i], waUs[i]); };
+        d.innerHTML = `<div style="height:150px; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden;">${getMediaHtml(media[i])}</div><div style="padding:20px;text-align:center;"><h3>${n}</h3></div>`;
         document.getElementById('grid').appendChild(d);
     });
 
@@ -95,19 +99,20 @@
         currentL = l;
         document.getElementById('mName').innerText = n;
         document.getElementById('mMedia').innerHTML = getMediaHtml(m);
-        if(window.PinUtils) window.PinUtils.build();
+        if(window.PinUtils) setTimeout(() => { window.PinUtils.build(); }, 150);
         document.getElementById('ytL').href = yt;
         document.getElementById('waL').href = wa;
         document.getElementById('modal').style.display = 'flex';
         st = { yt: false, wa: false };
         document.getElementById('dlB').className = 'download-now';
+        document.getElementById('dlB').disabled = true;
         document.getElementById('timerDiv').style.display = 'none';
         document.getElementById('ytL').className = 'step-btn';
         document.getElementById('waL').className = 'step-btn';
     }
 
     function checkAct(type) {
-        playClick();
+        playPop();
         st[type] = true;
         document.getElementById(type + 'L').classList.add('done');
         if(st.yt && st.wa) {
@@ -117,7 +122,7 @@
                 s--; document.getElementById('sec').innerText = s;
                 if(s <= 0) {
                     clearInterval(t);
-                    unlockSfx.play();
+                    winSfx.play();
                     document.getElementById('dlB').className = 'download-now active';
                     document.getElementById('dlB').disabled = false;
                 }
@@ -125,8 +130,8 @@
         }
     }
 
-    function closeM() { playClick(); document.getElementById('modal').style.display = 'none'; }
-    function downloadGo() { playClick(); window.location.href = currentL; }
+    function closeM() { playPop(); document.getElementById('modal').style.display = 'none'; }
+    function downloadGo() { playPop(); window.location.href = currentL; }
 </script>
 </body>
 </html>
