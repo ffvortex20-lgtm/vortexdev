@@ -9,11 +9,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 40px; }
 
-        /* Botões com Som e Brilho */
         .step-btn { 
             display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; 
             text-decoration: none; color: white; font-weight: bold; background: #111; 
-            border: 1px solid #333; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;
+            border: 1px solid #333; transition: 0.3s; text-align: center;
         }
         .step-btn:hover { border-color: var(--blue); box-shadow: 0 0 20px var(--glow); transform: translateY(-3px); }
         .step-btn:active { transform: scale(0.95); }
@@ -52,13 +51,12 @@
         <a href="" target="_blank" class="step-btn" id="waL" onclick="checkAct('wa')">JOIN WHATSAPP</a>
         <div id="timerDiv" style="display:none; color:var(--blue); margin:15px; font-weight:bold;">UNLOCKING IN <span id="sec">10</span>s...</div>
         <button id="dlB" class="download-now" disabled onclick="downloadGo()">DOWNLOAD NOW</button>
-        <p onclick="closeM()" style="margin-top:20px; color:#555; cursor:pointer; font-size:12px; font-weight:bold;">[ CANCEL ]</p>
+        <p onclick="closeM()" style="margin-top:20px; color:#555; cursor:pointer; font-size:12px;">[ CLOSE ]</p>
     </div>
 </div>
 
 <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
 <script>
-    // Config Som
     const clickSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
     const unlockSfx = new Audio('https://www.soundjay.com/communication/sounds/digital-beep-01.mp3');
     function playClick() { clickSfx.currentTime = 0; clickSfx.play(); }
