@@ -22,60 +22,46 @@
 <div class="admin-box">
     <h1 style="text-align:center; margin-bottom:30px;">VORTEX <span>CREATOR</span></h1>
     <div id="container-produtos"></div>
-    <button class="btn-add" onclick="addProd()">+ ADICIONAR NOVO ITEM</button>
-    <button class="btn-gen" onclick="generateSystem()">GERAR MEU HUB VELOCITY</button>
+    <button class="btn-add" onclick="addProd()">+ NOVO PRODUTO</button>
+    <button class="btn-gen" onclick="generateSystem()">GERAR HUB COMPLETO</button>
 </div>
 
 <div id="output-area">
-    <label>Link Gerado (TinyURL):</label>
+    <label>Link Gerado:</label>
     <textarea id="finalUrl" readonly></textarea>
     <button class="btn-gen" style="background:#222; margin-top:10px; font-size:13px;" onclick="copyLink()">COPIAR LINK</button>
 </div>
 
 <script>
-    const clickSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
-    function playSfx() { clickSfx.currentTime = 0; clickSfx.play(); }
+    const popSfx = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
+    function playPop() { popSfx.currentTime = 0; popSfx.play(); }
 
     let count = 0;
     function addProd() {
-        playSfx();
-        if(count >= 15) return alert("Limite atingido!");
+        playPop();
+        if(count >= 15) return;
         count++;
         const div = document.createElement('div');
         div.className = 'prod-input';
         div.innerHTML = `
-            <b style="color:#fff;">ITEM #${count}</b>
-            <label>Nome do Produto</label>
-            <input type="text" class="pName" placeholder="Ex: Executor V4">
-            <label>Mídia (Link Foto/YouTube/Pinterest ou Arquivo)</label>
-            <input type="text" class="pMediaLink" placeholder="Cole a URL aqui">
-            <input type="file" accept="image/*" onchange="processFile(this)">
-            <input type="hidden" class="pMediaBase">
-            <label>Link de Download Final</label>
-            <input type="text" class="pLink" placeholder="Mediafire/Mega">
-            <label>YouTube Link</label>
-            <input type="text" class="pYT" placeholder="URL para Inscrição">
-            <label>WhatsApp Link</label>
-            <input type="text" class="pWA" placeholder="URL do Grupo">
+            <b style="color:#fff;">PRODUTO #${count}</b>
+            <label>Nome</label><input type="text" class="pName">
+            <label>Mídia (Link Foto / YouTube / Pinterest)</label><input type="text" class="pMediaLink">
+            <label>Link Download</label><input type="text" class="pLink">
+            <label>YouTube</label><input type="text" class="pYT">
+            <label>WhatsApp</label><input type="text" class="pWA">
         `;
         document.getElementById('container-produtos').appendChild(div);
     }
 
-    function processFile(input) {
-        const reader = new FileReader();
-        reader.onload = (e) => { input.nextElementSibling.value = e.target.result; };
-        if(input.files[0]) reader.readAsDataURL(input.files[0]);
-    }
-
     async function generateSystem() {
-        playSfx();
+        playPop();
         const n = Array.from(document.querySelectorAll('.pName')).map(i => i.value).join('|');
         const l = Array.from(document.querySelectorAll('.pLink')).map(i => i.value).join('|');
         const yt = Array.from(document.querySelectorAll('.pYT')).map(i => i.value).join('|');
         const wa = Array.from(document.querySelectorAll('.pWA')).map(i => i.value).join('|');
-        const media = Array.from(document.querySelectorAll('.prod-input')).map(d => d.querySelector('.pMediaLink').value || d.querySelector('.pMediaBase').value).join('|');
+        const media = Array.from(document.querySelectorAll('.pMediaLink')).map(i => i.value).join('|');
 
-        // GARANTE QUE O LINK VÁ PARA V.HTML
         let loc = window.location.href;
         let targetPage = loc.substring(0, loc.lastIndexOf("/")) + "/v.html";
         const fullUrl = `${targetPage}?n=${encodeURIComponent(n)}&l=${encodeURIComponent(l)}&i=${encodeURIComponent(media)}&yt=${encodeURIComponent(yt)}&wa=${encodeURIComponent(wa)}`;
@@ -85,13 +71,10 @@
             const short = await res.text();
             document.getElementById('finalUrl').value = (short.includes("Error")) ? fullUrl : short;
             document.getElementById('output-area').style.display = 'block';
-        } catch(e) {
-            document.getElementById('finalUrl').value = fullUrl;
-            document.getElementById('output-area').style.display = 'block';
-        }
+        } catch(e) { document.getElementById('finalUrl').value = fullUrl; }
     }
 
-    function copyLink() { playSfx(); document.getElementById('finalUrl').select(); document.execCommand('copy'); alert("Copiado!"); }
+    function copyLink() { playPop(); document.getElementById('finalUrl').select(); document.execCommand('copy'); alert("Copiado!"); }
     addProd();
 </script>
 </body>
