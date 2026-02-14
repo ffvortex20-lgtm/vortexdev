@@ -2,82 +2,42 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>VORTEX | Hub & Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>VORTEX | Painel Gerador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --blue: #00a2ff; --card: #111; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 20px; }
-        
-        .nav-hub { display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto 40px; }
-        .logo { font-weight: 900; font-size: 1.8rem; }
-        .logo span { color: var(--blue); text-shadow: 0 0 10px var(--blue); }
-        .btn-wa { background: #25D366; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; }
-
-        .container { max-width: 600px; margin: 0 auto; }
-        .admin-card { background: var(--card); border: 1px solid #222; padding: 30px; border-radius: 20px; box-shadow: 0 0 30px rgba(0,162,255,0.1); }
-        
-        h2 { margin-bottom: 20px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
-        input:focus { border-color: var(--blue); }
-        
-        .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-gen:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--blue); }
-
-        .result-box { margin-top: 25px; display: none; }
-        textarea { width: 100%; height: 80px; background: #000; color: var(--blue); border: 1px dashed #444; padding: 10px; border-radius: 5px; font-size: 12px; resize: none; }
-        
-        .credits { margin-top: 30px; text-align: center; color: #666; font-size: 13px; }
-        .credits a { color: var(--blue); text-decoration: none; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .admin-card { background: var(--card); border: 1px solid #222; padding: 30px; border-radius: 20px; width: 400px; box-shadow: 0 0 30px rgba(0,162,255,0.1); }
+        h2 span { color: var(--blue); }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+        .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px; }
+        textarea { width: 100%; height: 80px; background: #000; color: var(--blue); border: 1px dashed #444; padding: 10px; margin-top: 20px; border-radius: 5px; resize: none; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<nav class="nav-hub">
-    <div class="logo">VORTEX<span>.</span></div>
-    <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="btn-wa">WHATSAPP</a>
-</nav>
-
-<div class="container">
-    <div class="admin-card">
-        <h2>Painel Gerador</h2>
-        <input type="text" id="name" placeholder="Nome do Produto (Ex: Roblox Executor)">
-        <input type="text" id="img" placeholder="Link da Foto (Imgur/Discord)">
-        <input type="text" id="url" placeholder="Link de Download (Mediafire/Drive)">
-        
-        <button class="btn-gen" onclick="gerarLink()">GERAR LINK VELOCITY</button>
-
-        <div id="result" class="result-box">
-            <p style="font-size: 12px; margin-bottom: 5px; color: #888;">Seu link personalizado:</p>
-            <textarea id="output" readonly></textarea>
-            <button class="btn-gen" style="background:#333; margin-top:5px; padding:8px;" onclick="copy()">Copiar Link</button>
-        </div>
-    </div>
-
-    <div class="credits">
-        Criado por <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank">VORTEX OFC</a>
-    </div>
+<div class="admin-card">
+    <h2>VORTEX <span>GERADOR</span></h2>
+    <input type="text" id="pName" placeholder="Nome do Produto">
+    <input type="text" id="pImg" placeholder="Link da Imagem (URL)">
+    <input type="text" id="pUrl" placeholder="Link de Download Real">
+    <button class="btn-gen" onclick="gerar()">GERAR LINK DE BLOQUEIO</button>
+    <textarea id="output" readonly placeholder="O link aparecerá aqui..."></textarea>
 </div>
 
 <script>
-    function gerarLink() {
-        const n = encodeURIComponent(document.getElementById('name').value);
-        const i = encodeURIComponent(document.getElementById('img').value);
-        const u = encodeURIComponent(document.getElementById('url').value);
+    function gerar() {
+        const n = encodeURIComponent(document.getElementById('pName').value);
+        const i = encodeURIComponent(document.getElementById('pImg').value);
+        const u = encodeURIComponent(document.getElementById('pUrl').value);
         
-        // Substitua 'SEU-USUARIO' pelo seu nome no GitHub após subir os arquivos
-        const base = window.location.href.replace('index.html', 'v.html');
-        const final = `${base}?n=${n}&i=${i}&url=${u}`;
-        
-        document.getElementById('output').value = final;
-        document.getElementById('result').style.display = 'block';
-    }
+        // Pega o endereço atual e troca index.html por v.html
+        let base = window.location.href.split('?')[0];
+        base = base.replace('index.html', 'v.html');
+        if(!base.includes('v.html')) base += 'v.html';
 
-    function copy() {
-        const text = document.getElementById('output');
-        text.select();
-        document.execCommand('copy');
-        alert("Link copiado!");
+        const final = `${base}?n=${n}&i=${i}&url=${u}`;
+        document.getElementById('output').value = final;
     }
 </script>
 </body>
