@@ -2,53 +2,76 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>VORTEX | Unlocker</title>
+    <title>Velocity | Private Access</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050505; --blue: #00a2ff; --card: #111; --wa: #25D366; --yt: #ff0000; }
+        :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; --yt: #ff0000; --wa: #25D366; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         
-        nav { width: 100%; display: flex; justify-content: space-between; padding: 20px 8%; align-items: center; }
-        .logo span { color: var(--blue); text-shadow: 0 0 10px var(--blue); }
+        nav { width: 100%; display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; }
+        .logo span { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
 
-        .container { max-width: 400px; width: 90%; margin: 40px auto; }
-        .velocity-card { background: var(--card); border: 1px solid #222; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 30px rgba(0, 162, 255, 0.1); }
-        .preview-img { width: 100%; height: 180px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid #333; }
+        .velocity-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; padding: 30px; text-align: center; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border-top: 2px solid var(--blue); margin-top: 40px; }
 
-        /* Estilo Botões de Bloqueio */
-        .step-btn { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; color: white; text-decoration: none; }
-        .yt-btn { background: var(--yt); }
-        .wa-btn { background: var(--wa); }
-        .step-btn.done { background: #333; opacity: 0.6; pointer-events: none; }
-        .step-btn.done::after { content: " ✅"; }
+        .tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid #222; }
+        .tab-btn { background: none; border: none; color: #444; padding: 10px; cursor: pointer; font-weight: 800; font-size: 11px; transition: 0.3s; }
+        .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
 
-        .btn-main { background: #fff; color: #000; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 900; cursor: not-allowed; opacity: 0.3; margin-top: 20px; }
-        .btn-main.ready { background: var(--blue); color: white; cursor: pointer; opacity: 1; box-shadow: 0 0 15px var(--blue); }
+        .content-section { display: none; animation: fadeIn 0.4s; }
+        .content-section.active { display: block; }
 
-        #timer { margin-top: 15px; color: var(--blue); font-weight: bold; display: none; }
+        .preview-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; border: 1px solid #222; }
+
+        .lock-btn { display: block; width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; color: white; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; }
+        .yt { background: var(--yt); }
+        .wa { background: var(--wa); }
+        .lock-btn.done { background: #1a1a1a; color: #444; pointer-events: none; border: 1px solid #333; }
+
+        .btn-main { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #222; color: #555; font-weight: 900; margin-top: 15px; cursor: not-allowed; }
+        .btn-main.ready { background: white; color: black; cursor: pointer; box-shadow: 0 0 20px white; }
+
+        .script-box { background: #000; color: var(--blue); padding: 15px; border-radius: 8px; border: 1px solid #222; font-family: monospace; font-size: 12px; text-align: left; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo" style="font-weight:900; font-size:1.5rem;">VORTEX<span>.</span></div>
-    <div style="color: #666; font-size: 12px;">CREATED BY VORTEX</div>
+    <div class="logo" style="font-weight:900; font-size:1.6rem;">VELO<span>CITY</span></div>
+    <div style="font-size:10px; color:#444; letter-spacing:2px;">VORTEX PRODUCER</div>
 </nav>
 
-<div class="container">
-    <div class="velocity-card">
+<div class="velocity-card">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('download')">DOWNLOAD</button>
+        <button class="tab-btn" onclick="showTab('scripts')">SCRIPTS</button>
+        <button class="tab-btn" onclick="showTab('credits')">CREDITS</button>
+    </div>
+
+    <div id="download" class="content-section active">
         <img id="pImg" class="preview-img" src="">
-        <h2 id="pName" style="margin-bottom: 20px;">Product Name</h2>
+        <h2 id="pName" style="margin-bottom: 20px;">PRODUCT</h2>
+        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="lock-btn yt" id="ytBtn" onclick="verify('yt')">SUBSCRIBE ON YOUTUBE</a>
+        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="lock-btn wa" id="waBtn" onclick="verify('wa')">JOIN WHATSAPP CHANNEL</a>
+        <div id="timer" style="display:none; color:var(--blue); font-weight:bold; margin:10px;">Wait <span id="sec">10</span>s...</div>
+        <button id="mainBtn" class="btn-main" disabled onclick="redirect()">UNLOCK ACCESS</button>
+    </div>
 
-        <p style="font-size: 12px; color: #888; margin-bottom: 15px;">COMPLETE AS ETAPAS PARA LIBERAR:</p>
-        
-        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="step-btn yt-btn" id="ytBtn" onclick="checkStep('yt')">INSCREVER-SE NO CANAL</a>
-        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="step-btn wa-btn" id="waBtn" onclick="checkStep('wa')">ENTRAR NO WHATSAPP</a>
+    <div id="scripts" class="content-section">
+        <h3>TinyURL API Script</h3>
+        <p style="color:#666; font-size:12px; margin:10px 0;">Script para encurtamento dinâmico:</p>
+        <div class="script-box">fetch('https://tinyurl.com/api-create.php?url=' + meuLink)</div>
+        <button class="btn-main ready" style="margin-top:15px; padding:10px;" onclick="alert('Copiado!')">COPY SCRIPT</button>
+    </div>
 
-        <div id="timer">Liberando em <span id="sec">10</span>s...</div>
-        
-        <button id="mainBtn" class="btn-main" disabled onclick="finalDownload()">DOWNLOAD UNLOCKED</button>
+    <div id="credits" class="content-section">
+        <div style="padding:20px;">
+            <h3 style="color:var(--blue);">BY VORTEX OFC</h3>
+            <p style="color:#666; font-size:13px; margin-top:10px;">O melhor do modding e automação.</p>
+            <button class="btn-main ready" onclick="window.open('http://www.youtube.com/@Vortex-Ofc1')">YOUTUBE CHANNEL</button>
+        </div>
     </div>
 </div>
 
@@ -57,50 +80,33 @@
     document.getElementById('pName').innerText = params.get('n') || "Vortex File";
     document.getElementById('pImg').src = params.get('i') || "https://via.placeholder.com/350x180";
 
-    let steps = { yt: false, wa: false };
-
-    function checkStep(step) {
-        steps[step] = true;
-        document.getElementById(step + 'Btn').classList.add('done');
-        
-        if (steps.yt && steps.wa) {
-            startCountdown();
-        }
+    function showTab(id) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 
-    function startCountdown() {
-        const timerDiv = document.getElementById('timer');
-        const secSpan = document.getElementById('sec');
-        const mainBtn = document.getElementById('mainBtn');
-        let timeLeft = 10;
+    let status = { yt: false, wa: false };
+    function verify(type) {
+        status[type] = true;
+        document.getElementById(type + 'Btn').classList.add('done');
+        document.getElementById(type + 'Btn').innerText = "COMPLETED ✅";
+        if(status.yt && status.wa) startTimer();
+    }
 
-        timerDiv.style.display = 'block';
-
-        const countdown = setInterval(() => {
-            timeLeft--;
-            secSpan.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                timerDiv.innerText = "Link Liberado!";
-                mainBtn.disabled = false;
-                mainBtn.classList.add('ready');
-            }
+    function startTimer() {
+        const t = document.getElementById('timer');
+        const b = document.getElementById('mainBtn');
+        let s = 10;
+        t.style.display = 'block';
+        const timer = setInterval(() => {
+            s--; document.getElementById('sec').innerText = s;
+            if(s <= 0) { clearInterval(timer); t.style.display = 'none'; b.disabled = false; b.classList.add('ready'); }
         }, 1000);
     }
 
-    async function finalDownload() {
-        const target = params.get('url');
-        const mainBtn = document.getElementById('mainBtn');
-        mainBtn.innerText = "GENERATING TINYURL...";
-
-        try {
-            const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(target)}`);
-            const short = await res.text();
-            window.location.href = short;
-        } catch {
-            window.location.href = target;
-        }
-    }
+    function redirect() { window.location.href = params.get('url'); }
 </script>
 </body>
 </html>
