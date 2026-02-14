@@ -11,6 +11,7 @@
         .prod-input { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; border-left: 4px solid var(--blue); }
         label { font-size: 10px; color: var(--blue); text-transform: uppercase; display: block; margin-top: 15px; font-weight: 900; }
         input { width: 100%; padding: 12px; margin: 5px 0; background: #0a0a0a; border: 1px solid #222; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
+        input[type="file"] { font-size: 10px; border: 1px dashed #444; cursor: pointer; }
         .btn-add { background: none; color: var(--blue); border: 2px dashed var(--blue); width: 100%; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
         .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 20px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 16px; text-transform: uppercase; }
         #output-area { margin-top: 30px; display: none; width: 100%; max-width: 650px; }
@@ -45,13 +46,33 @@
         div.className = 'prod-input';
         div.innerHTML = `
             <b style="color:#fff;">PRODUTO #${count}</b>
-            <label>Nome</label><input type="text" class="pName">
-            <label>Mídia (Link Foto / YouTube / Pinterest)</label><input type="text" class="pMediaLink">
-            <label>Link Download</label><input type="text" class="pLink">
-            <label>YouTube</label><input type="text" class="pYT">
-            <label>WhatsApp</label><input type="text" class="pWA">
+            <label>Nome do Produto</label>
+            <input type="text" class="pName" placeholder="Ex: Script Fluxus">
+            
+            <label>Mídia (Cole Link Pinterest/YT/Foto OU suba arquivo)</label>
+            <input type="text" class="pMediaLink" placeholder="Cole a URL aqui">
+            <input type="file" accept="image/*" onchange="processFile(this)">
+            <input type="hidden" class="pMediaBase">
+
+            <label>Link de Download</label>
+            <input type="text" class="pLink" placeholder="Mediafire/Mega">
+            <label>YouTube Link</label>
+            <input type="text" class="pYT">
+            <label>WhatsApp Link</label>
+            <input type="text" class="pWA">
         `;
         document.getElementById('container-produtos').appendChild(div);
+    }
+
+    // FUNÇÃO QUE PROCESSA O ARQUIVO ENVIADO
+    function processFile(input) {
+        playPop();
+        const reader = new FileReader();
+        reader.onload = (e) => { 
+            // Salva a imagem convertida no campo oculto
+            input.nextElementSibling.value = e.target.result; 
+        };
+        if(input.files[0]) reader.readAsDataURL(input.files[0]);
     }
 
     async function generateSystem() {
@@ -60,7 +81,11 @@
         const l = Array.from(document.querySelectorAll('.pLink')).map(i => i.value).join('|');
         const yt = Array.from(document.querySelectorAll('.pYT')).map(i => i.value).join('|');
         const wa = Array.from(document.querySelectorAll('.pWA')).map(i => i.value).join('|');
-        const media = Array.from(document.querySelectorAll('.pMediaLink')).map(i => i.value).join('|');
+        
+        // Pega ou o Link digitado ou a Foto carregada do PC
+        const media = Array.from(document.querySelectorAll('.prod-input')).map(d => {
+            return d.querySelector('.pMediaLink').value || d.querySelector('.pMediaBase').value;
+        }).join('|');
 
         let loc = window.location.href;
         let targetPage = loc.substring(0, loc.lastIndexOf("/")) + "/v.html";
@@ -71,10 +96,13 @@
             const short = await res.text();
             document.getElementById('finalUrl').value = (short.includes("Error")) ? fullUrl : short;
             document.getElementById('output-area').style.display = 'block';
-        } catch(e) { document.getElementById('finalUrl').value = fullUrl; }
+        } catch(e) { 
+            document.getElementById('finalUrl').value = fullUrl; 
+            document.getElementById('output-area').style.display = 'block';
+        }
     }
 
-    function copyLink() { playPop(); document.getElementById('finalUrl').select(); document.execCommand('copy'); alert("Copiado!"); }
+    function copyLink() { playPop(); document.getElementById('finalUrl').select(); document.execCommand('copy'); alert("Link Copiado!"); }
     addProd();
 </script>
 </body>
