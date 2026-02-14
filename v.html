@@ -2,111 +2,98 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Velocity | Private Access</title>
+    <title>Velocity | Unlocker</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; --yt: #ff0000; --wa: #25D366; }
+        :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         
         nav { width: 100%; display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; }
+        .logo { font-weight: 900; font-size: 1.6rem; letter-spacing: 2px; }
         .logo span { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
 
-        .velocity-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; padding: 30px; text-align: center; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border-top: 2px solid var(--blue); margin-top: 40px; }
+        .velocity-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; padding: 30px; text-align: center; width: 450px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); border-top: 2px solid var(--blue); margin-top: 40px; }
 
         .tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid #222; }
-        .tab-btn { background: none; border: none; color: #444; padding: 10px; cursor: pointer; font-weight: 800; font-size: 11px; transition: 0.3s; }
+        .tab-btn { background: none; border: none; color: #444; padding: 10px; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; }
         .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
 
-        .content-section { display: none; animation: fadeIn 0.4s; }
-        .content-section.active { display: block; }
-
-        .preview-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; border: 1px solid #222; }
-
-        .lock-btn { display: block; width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; color: white; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; }
-        .yt { background: var(--yt); }
-        .wa { background: var(--wa); }
-        .lock-btn.done { background: #1a1a1a; color: #444; pointer-events: none; border: 1px solid #333; }
-
-        .btn-main { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #222; color: #555; font-weight: 900; margin-top: 15px; cursor: not-allowed; }
-        .btn-main.ready { background: white; color: black; cursor: pointer; box-shadow: 0 0 20px white; }
-
-        .script-box { background: #000; color: var(--blue); padding: 15px; border-radius: 8px; border: 1px solid #222; font-family: monospace; font-size: 12px; text-align: left; }
+        .preview-img { width: 100%; border-radius: 12px; margin-bottom: 20px; border: 1px solid #222; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .desc { color: #888; font-size: 13px; margin-bottom: 20px; }
+
+        .step-btn { display: block; width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 8px; color: white; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; background: #1a1a1a; border: 1px solid #333; }
+        .step-btn:hover { border-color: var(--blue); }
+        .step-btn.done { background: #0a2510; color: #25D366; border-color: #25D366; pointer-events: none; }
+
+        .btn-download { width: 100%; padding: 18px; border-radius: 10px; border: none; background: #222; color: #555; font-weight: 900; margin-top: 15px; cursor: not-allowed; text-transform: uppercase; }
+        .btn-download.ready { background: #fff; color: #000; cursor: pointer; box-shadow: 0 0 25px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo" style="font-weight:900; font-size:1.6rem;">VELO<span>CITY</span></div>
-    <div style="font-size:10px; color:#444; letter-spacing:2px;">VORTEX PRODUCER</div>
+    <div class="logo">VELO<span>CITY</span></div>
+    <div style="font-size:10px; color:#444; letter-spacing:2px;">PRODUCTS</div>
 </nav>
 
 <div class="velocity-card">
     <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('download')">DOWNLOAD</button>
-        <button class="tab-btn" onclick="showTab('scripts')">SCRIPTS</button>
-        <button class="tab-btn" onclick="showTab('credits')">CREDITS</button>
+        <button class="tab-btn active">Unlock Download</button>
+        <button class="tab-btn">Information</button>
     </div>
 
-    <div id="download" class="content-section active">
-        <img id="pImg" class="preview-img" src="">
-        <h2 id="pName" style="margin-bottom: 20px;">PRODUCT</h2>
-        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="lock-btn yt" id="ytBtn" onclick="verify('yt')">SUBSCRIBE ON YOUTUBE</a>
-        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="lock-btn wa" id="waBtn" onclick="verify('wa')">JOIN WHATSAPP CHANNEL</a>
-        <div id="timer" style="display:none; color:var(--blue); font-weight:bold; margin:10px;">Wait <span id="sec">10</span>s...</div>
-        <button id="mainBtn" class="btn-main" disabled onclick="redirect()">UNLOCK ACCESS</button>
+    <img id="pImg" class="preview-img" src="">
+    <h2 id="pName" style="margin-bottom: 5px; font-weight: 900;">PRODUCT NAME</h2>
+    <p id="pDesc" class="desc">Aguardando descrição...</p>
+
+    <div id="lock-area">
+        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="step-btn" id="yt" onclick="validar('yt')">CLICK TO SUBSCRIBE ON YOUTUBE</a>
+        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="step-btn" id="wa" onclick="validar('wa')">JOIN OUR WHATSAPP CHANNEL</a>
     </div>
 
-    <div id="scripts" class="content-section">
-        <h3>TinyURL API Script</h3>
-        <p style="color:#666; font-size:12px; margin:10px 0;">Script para encurtamento dinâmico:</p>
-        <div class="script-box">fetch('https://tinyurl.com/api-create.php?url=' + meuLink)</div>
-        <button class="btn-main ready" style="margin-top:15px; padding:10px;" onclick="alert('Copiado!')">COPY SCRIPT</button>
+    <div id="status" style="display:none; color:var(--blue); font-size:14px; margin:15px; font-weight:bold;">
+        Liberando em <span id="seg">10</span>s...
     </div>
-
-    <div id="credits" class="content-section">
-        <div style="padding:20px;">
-            <h3 style="color:var(--blue);">BY VORTEX OFC</h3>
-            <p style="color:#666; font-size:13px; margin-top:10px;">O melhor do modding e automação.</p>
-            <button class="btn-main ready" onclick="window.open('http://www.youtube.com/@Vortex-Ofc1')">YOUTUBE CHANNEL</button>
-        </div>
-    </div>
+    
+    <button id="mainBtn" class="btn-download" disabled onclick="finalizar()">Download Now</button>
 </div>
 
 <script>
     const params = new URLSearchParams(window.location.search);
-    document.getElementById('pName').innerText = params.get('n') || "Vortex File";
-    document.getElementById('pImg').src = params.get('i') || "https://via.placeholder.com/350x180";
+    document.getElementById('pName').innerText = params.get('n') || "Velocity Product";
+    document.getElementById('pImg').src = params.get('i') || "https://via.placeholder.com/450x250";
+    document.getElementById('pDesc').innerText = params.get('d') || "Experience unmatched power and stability.";
 
-    function showTab(id) {
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
+    let checks = { yt: false, wa: false };
+
+    function validar(tipo) {
+        checks[tipo] = true;
+        const el = document.getElementById(tipo);
+        el.classList.add('done');
+        el.innerText = tipo.toUpperCase() + " COMPLETED ✅";
+        
+        if(checks.yt && checks.wa) {
+            let tempo = 10;
+            document.getElementById('status').style.display = 'block';
+            const contagem = setInterval(() => {
+                tempo--;
+                document.getElementById('seg').innerText = tempo;
+                if(tempo <= 0) {
+                    clearInterval(contagem);
+                    document.getElementById('status').innerText = "LINK LIBERADO!";
+                    const btn = document.getElementById('mainBtn');
+                    btn.disabled = false;
+                    btn.classList.add('ready');
+                }
+            }, 1000);
+        }
     }
 
-    let status = { yt: false, wa: false };
-    function verify(type) {
-        status[type] = true;
-        document.getElementById(type + 'Btn').classList.add('done');
-        document.getElementById(type + 'Btn').innerText = "COMPLETED ✅";
-        if(status.yt && status.wa) startTimer();
+    function finalizar() {
+        window.location.href = params.get('url');
     }
-
-    function startTimer() {
-        const t = document.getElementById('timer');
-        const b = document.getElementById('mainBtn');
-        let s = 10;
-        t.style.display = 'block';
-        const timer = setInterval(() => {
-            s--; document.getElementById('sec').innerText = s;
-            if(s <= 0) { clearInterval(timer); t.style.display = 'none'; b.disabled = false; b.classList.add('ready'); }
-        }, 1000);
-    }
-
-    function redirect() { window.location.href = params.get('url'); }
 </script>
 </body>
 </html>
