@@ -2,14 +2,14 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Velocity | Access Point</title>
+    <title>Velocity | Access Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center; }
 
-        .logo { font-weight: 900; font-size: 2rem; margin-bottom: 50px; }
+        .logo { font-weight: 900; font-size: 2rem; margin-bottom: 50px; letter-spacing: 2px; }
         .logo span { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
 
         .container-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; }
@@ -20,28 +20,31 @@
             animation: fadeIn 0.6s ease forwards; opacity: 0;
         }
         @keyframes fadeIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-
-        .card:hover { transform: translateY(-10px); border-color: var(--blue); box-shadow: 0 15px 40px rgba(0,162,255,0.2); }
-        .card img { width: 100%; height: 150px; object-fit: cover; background: #000; }
+        .card:hover { transform: translateY(-8px); border-color: var(--blue); box-shadow: 0 10px 30px rgba(0,162,255,0.2); }
+        .card .media-box { width: 100%; height: 150px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
         .card-body { padding: 20px; text-align: center; }
-        .btn-access { background: #fff; color: #000; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
+        .btn-access { background: #fff; color: #000; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: 900; margin-top: 10px; text-transform: uppercase; font-size: 11px; }
 
         /* MODAL */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; justify-content: center; align-items: center; }
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(10px); z-index: 9999; justify-content: center; align-items: center; }
         .modal-box { 
-            background: #080808; border: 1px solid #222; width: 380px; padding: 30px; border-radius: 24px; 
+            background: #080808; border: 1px solid #222; width: 420px; padding: 30px; border-radius: 28px; 
             text-align: center; border-top: 4px solid var(--blue); animation: scaleUp 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28);
         }
-        @keyframes scaleUp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .step-btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; text-decoration: none; color: white; font-weight: bold; background: #111; border: 1px solid #333; transition: 0.3s; }
+        #mMediaContainer { width: 100%; border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #222; height: 200px; }
+        #mMediaContainer iframe, #mMediaContainer img { width: 100%; height: 100%; object-fit: cover; border: none; }
+
+        .step-btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; text-decoration: none; color: white; font-weight: bold; background: #111; border: 1px solid #333; transition: 0.3s; font-size: 13px; }
         .step-btn.done { border-color: #25D366; color: #25D366; background: rgba(37, 211, 102, 0.05); }
 
         .download-now { 
             width: 100%; padding: 20px; border-radius: 12px; border: none; background: #222; 
-            color: #444; font-weight: 900; margin-top: 20px; cursor: not-allowed; text-transform: uppercase;
+            color: #444; font-weight: 900; margin-top: 15px; cursor: not-allowed; text-transform: uppercase; transition: 0.4s;
         }
-        .download-now.active { background: var(--blue); color: white; cursor: pointer; box-shadow: 0 0 20px var(--blue); }
+        .download-now.active { background: #fff; color: #000; cursor: pointer; box-shadow: 0 0 20px #fff; }
     </style>
 </head>
 <body>
@@ -51,18 +54,18 @@
 
 <div id="modal">
     <div class="modal-box">
-        <img id="mImg" style="width:100%; height:140px; border-radius:12px; object-fit:cover; margin-bottom:20px;">
-        <h2 id="mName" style="margin-bottom:25px; font-weight: 900;">PRODUCT</h2>
+        <div id="mMediaContainer"></div>
+        <h2 id="mName" style="margin-bottom:20px; font-weight: 900;">PRODUCT</h2>
         
         <a href="" target="_blank" class="step-btn" id="ytLink" onclick="check('yt')">SUBSCRIBE ON YOUTUBE</a>
         <a href="" target="_blank" class="step-btn" id="waLink" onclick="check('wa')">JOIN WHATSAPP CHANNEL</a>
         
-        <div id="status" style="display:none; color:var(--blue); font-weight:bold; margin:15px;">
-            Liberando em <span id="timer">10</span>s...
+        <div id="status" style="display:none; color:var(--blue); font-weight:bold; margin-bottom:15px; font-size: 13px;">
+            UNLOCKING IN <span id="timer">10</span>s...
         </div>
         
         <button id="dlBtn" class="download-now" disabled onclick="go()">DOWNLOAD NOW</button>
-        <p onclick="closeM()" style="color:#444; margin-top:20px; cursor:pointer; font-size:11px;">CANCEL / CLOSE</p>
+        <p onclick="closeM()" style="color:#555; margin-top:20px; cursor:pointer; font-size:10px; font-weight:900;">CLOSE</p>
     </div>
 </div>
 
@@ -70,23 +73,31 @@
     const params = new URLSearchParams(window.location.search);
     const names = params.get('n')?.split('|') || [];
     const links = params.get('l')?.split('|') || [];
-    const imgs = params.get('i')?.split('|') || [];
-    const ytLinks = params.get('yt')?.split('|') || [];
-    const waLinks = params.get('wa')?.split('|') || [];
+    const media = params.get('i')?.split('|') || [];
+    const ytUrls = params.get('yt')?.split('|') || [];
+    const waUrls = params.get('wa')?.split('|') || [];
 
-    let currentLink = "";
+    let currentDl = "";
     const grid = document.getElementById('grid');
+
+    function getMediaHtml(url) {
+        if(url.includes('youtube.com/watch') || url.includes('youtu.be')) {
+            let id = url.includes('watch?v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
+            return `<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>`;
+        }
+        return `<img src="${url || 'https://via.placeholder.com/300x150/111/fff?text=VORTEX'}">`;
+    }
 
     names.forEach((name, i) => {
         if(name) {
             const div = document.createElement('div');
             div.className = 'card';
-            div.onclick = () => openM(name, links[i], imgs[i], ytLinks[i], waLinks[i]);
+            div.onclick = () => openM(name, links[i], media[i], ytUrls[i], waUrls[i]);
             div.innerHTML = `
-                <img src="${imgs[i] || 'https://via.placeholder.com/300x150'}">
+                <div class="media-box">${getMediaHtml(media[i])}</div>
                 <div class="card-body">
-                    <h3 style="font-size:16px;">${name}</h3>
-                    <button class="btn-access">DOWNLOAD</button>
+                    <h3>${name}</h3>
+                    <button class="btn-access">ACCESS</button>
                 </div>
             `;
             grid.appendChild(div);
@@ -95,16 +106,17 @@
 
     let st = { yt: false, wa: false };
 
-    function openM(n, l, i, yt, wa) {
-        currentLink = l;
+    function openM(n, l, m, yt, wa) {
+        currentDl = l;
         document.getElementById('mName').innerText = n;
-        document.getElementById('mImg').src = i || '';
-        document.getElementById('ytLink').href = yt || 'https://youtube.com';
-        document.getElementById('waLink').href = wa || 'https://whatsapp.com';
+        document.getElementById('mMediaContainer').innerHTML = getMediaHtml(m);
+        document.getElementById('ytLink').href = yt || '#';
+        document.getElementById('waLink').href = wa || '#';
         document.getElementById('modal').style.display = 'flex';
         st = { yt: false, wa: false };
         document.getElementById('ytLink').className = 'step-btn';
         document.getElementById('waLink').className = 'step-btn';
+        document.getElementById('status').style.display = 'none';
         document.getElementById('dlBtn').className = 'download-now';
         document.getElementById('dlBtn').disabled = true;
     }
@@ -127,8 +139,8 @@
         }
     }
 
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-    function go() { window.location.href = currentLink; }
+    function closeM() { document.getElementById('modal').style.display = 'none'; document.getElementById('mMediaContainer').innerHTML = ""; }
+    function go() { window.location.href = currentDl; }
 </script>
 </body>
 </html>
