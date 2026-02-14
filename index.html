@@ -2,78 +2,76 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>VORTEX | Ultra Generator</title>
+    <title>VORTEX | Admin Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --blue: #00a2ff; --card: #111; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .admin-box { background: var(--card); border: 1px solid #222; padding: 30px; border-radius: 20px; width: 100%; max-width: 650px; box-shadow: 0 0 40px rgba(0,162,255,0.1); }
-        .prod-input { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; position: relative; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        label { font-size: 10px; color: var(--blue); text-transform: uppercase; display: block; margin-top: 15px; font-weight: 900; letter-spacing: 1px; }
-        input { width: 100%; padding: 12px; margin: 5px 0; background: #0a0a0a; border: 1px solid #222; color: white; border-radius: 8px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--blue); background: #111; }
-        .btn-add { background: none; color: var(--blue); border: 2px dashed var(--blue); width: 100%; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.3s; }
-        .btn-add:hover { background: rgba(0,162,255,0.15); transform: scale(1.01); }
-        .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 20px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+        .prod-input { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; border-left: 4px solid var(--blue); position: relative; }
+        label { font-size: 10px; color: var(--blue); text-transform: uppercase; display: block; margin-top: 15px; font-weight: 900; }
+        input { width: 100%; padding: 12px; margin: 5px 0; background: #0a0a0a; border: 1px solid #222; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--blue); }
+        .btn-add { background: none; color: var(--blue); border: 2px dashed var(--blue); width: 100%; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.2s; }
+        .btn-add:hover { background: rgba(0,162,255,0.1); }
+        .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 20px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 16px; text-transform: uppercase; transition: 0.2s; }
+        .btn-gen:active { transform: scale(0.98); }
         #output-area { margin-top: 30px; display: none; width: 100%; max-width: 650px; }
-        textarea { width: 100%; height: 70px; background: #000; color: #25D366; border: 1px dashed #25D366; padding: 10px; border-radius: 10px; resize: none; font-size: 11px; margin-top: 10px; }
+        textarea { width: 100%; height: 70px; background: #000; color: #25D366; border: 1px dashed #25D366; padding: 10px; border-radius: 10px; resize: none; font-size: 11px; }
     </style>
 </head>
 <body>
 
 <div class="admin-box">
-    <h1 style="text-align:center; margin-bottom:30px;">VORTEX <span>DASHBOARD</span></h1>
+    <h1 style="text-align:center; margin-bottom:30px;">VORTEX <span>CREATOR</span></h1>
     <div id="container-produtos"></div>
-    <button class="btn-add" onclick="addProd()">+ ADICIONAR NOVO ITEM (MÁX 15)</button>
-    <button class="btn-gen" onclick="generateSystem()">GERAR LINK VELOCITY</button>
+    <button class="btn-add" onclick="addProd()">+ ADICIONAR NOVO ITEM (LIMITE 15)</button>
+    <button class="btn-gen" onclick="generateSystem()">GERAR MEU HUB VELOCITY</button>
 </div>
 
 <div id="output-area">
-    <label>Link de Divulgação:</label>
+    <label>Link Gerado:</label>
     <textarea id="finalUrl" readonly></textarea>
-    <button class="btn-gen" style="background:#222; margin-top:10px; font-size:13px; padding: 12px;" onclick="copy()">COPIAR LINK</button>
+    <button class="btn-gen" style="background:#222; margin-top:10px; font-size:13px;" onclick="copyLink()">COPIAR LINK</button>
 </div>
 
 <script>
+    const clickSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+    function playSfx() { clickSfx.currentTime = 0; clickSfx.play(); }
+
     let count = 0;
     function addProd() {
+        playSfx();
         if(count >= 15) return alert("Limite atingido!");
         count++;
         const div = document.createElement('div');
         div.className = 'prod-input';
         div.innerHTML = `
-            <b style="font-size: 14px; color:#fff;">ITEM #${count}</b>
+            <b style="color:#fff;">ITEM #${count}</b>
             <label>Nome do Produto</label>
             <input type="text" class="pName" placeholder="Ex: Executor V4">
-            
-            <label>Mídia (Link de Foto, Link de Vídeo ou Arquivo)</label>
-            <input type="text" class="pMediaLink" placeholder="Cole Link da Foto ou Link do YouTube">
-            <input type="file" class="pMediaFile" accept="image/*" onchange="processMedia(this)">
+            <label>Mídia (Link Foto/YouTube/Pinterest ou Arquivo)</label>
+            <input type="text" class="pMediaLink" placeholder="URL da mídia aqui">
+            <input type="file" accept="image/*" onchange="processFile(this)">
             <input type="hidden" class="pMediaBase">
-
-            <label>Download Final</label>
-            <input type="text" class="pLink" placeholder="Link do Mediafire/Mega">
-            
-            <label>YouTube (Ação de Subscribe)</label>
-            <input type="text" class="pYT" placeholder="URL do Canal ou Vídeo para Bloqueio">
-            
-            <label>WhatsApp (Ação de Join)</label>
-            <input type="text" class="pWA" placeholder="URL do Grupo/Canal">
+            <label>Link de Download Final</label>
+            <input type="text" class="pLink" placeholder="Ex: Mediafire">
+            <label>Link YouTube</label>
+            <input type="text" class="pYT" placeholder="Seu Canal">
+            <label>Link WhatsApp</label>
+            <input type="text" class="pWA" placeholder="Seu Grupo">
         `;
         document.getElementById('container-produtos').appendChild(div);
     }
 
-    function processMedia(input) {
+    function processFile(input) {
         const reader = new FileReader();
-        reader.onload = (e) => { 
-            input.nextElementSibling.value = e.target.result; 
-            alert("Imagem carregada! Lembre-se: arquivos tornam o link longo. Se falhar, use links!");
-        };
+        reader.onload = (e) => { input.nextElementSibling.value = e.target.result; };
         if(input.files[0]) reader.readAsDataURL(input.files[0]);
     }
 
     async function generateSystem() {
+        playSfx();
         const n = Array.from(document.querySelectorAll('.pName')).map(i => i.value).join('|');
         const l = Array.from(document.querySelectorAll('.pLink')).map(i => i.value).join('|');
         const yt = Array.from(document.querySelectorAll('.pYT')).map(i => i.value).join('|');
@@ -81,22 +79,15 @@
         const media = Array.from(document.querySelectorAll('.prod-input')).map(d => d.querySelector('.pMediaLink').value || d.querySelector('.pMediaBase').value).join('|');
 
         let base = window.location.href.replace('index.html', 'v.html');
-        if(!base.includes('v.html')) base += 'v.html';
-        
         const fullUrl = `${base}?n=${encodeURIComponent(n)}&l=${encodeURIComponent(l)}&i=${encodeURIComponent(media)}&yt=${encodeURIComponent(yt)}&wa=${encodeURIComponent(wa)}`;
 
-        try {
-            const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`);
-            const short = await res.text();
-            if(short.includes("Error")) throw new Error();
-            document.getElementById('finalUrl').value = short;
-            document.getElementById('output-area').style.display = 'block';
-        } catch(e) {
-            alert("Erro: Link muito longo. Use links de imagens/vídeos em vez de arquivos locais.");
-        }
+        const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`);
+        const short = await res.text();
+        document.getElementById('finalUrl').value = short;
+        document.getElementById('output-area').style.display = 'block';
     }
 
-    function copy() { document.getElementById('finalUrl').select(); document.execCommand('copy'); alert("Copiado!"); }
+    function copyLink() { playSfx(); document.getElementById('finalUrl').select(); document.execCommand('copy'); alert("Copiado!"); }
     addProd();
 </script>
 </body>
