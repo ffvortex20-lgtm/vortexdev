@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Velocity Admin - Gerador de Cards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <h2>🚀 Gerador de Produto Velocity</h2>
+        
+        <label>Nome do Produto:</label>
+        <input type="text" id="prodName" placeholder="Ex: Velocity Roblox External">
+        
+        <label>Categoria (Aba):</label>
+        <select id="prodCat">
+            <option value="software">Software</option>
+            <option value="tools">Tools</option>
+            <option value="servers">Servers</option>
+        </select>
+
+        <label>Link de Download (Original):</label>
+        <input type="url" id="prodLink" placeholder="https://link-direto.com/file.exe">
+
+        <button onclick="gerarLinkPersonalizado()" class="btn-primary">Gerar Link Curto e Salvar</button>
+
+        <div id="resultado" class="result-box">
+            <p>Link Gerado:</p>
+            <code id="linkFinal">...</code>
+        </div>
+    </div>
+
+    <script>
+        async function gerarLinkPersonalizado() {
+            const urlOriginal = document.getElementById('prodLink').value;
+            const resElement = document.getElementById('linkFinal');
+
+            // Chamada API TinyURL
+            const resp = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(urlOriginal)}`);
+            const linkCurto = await resp.text();
+
+            resElement.innerText = linkCurto;
+            alert("Produto configurado com sucesso! (Simulação de salvamento)");
+            // Aqui, em um sistema real com banco de dados, salvaríamos no Firebase/MySQL
+        }
+    </script>
+</body>
+</html>
