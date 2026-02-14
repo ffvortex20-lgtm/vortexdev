@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Velocity | Access</title>
+    <title>Velocity | Access Point</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; }
@@ -26,7 +26,7 @@
         .card-body { padding: 20px; text-align: center; }
         .btn-access { background: #fff; color: #000; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
 
-        /* MODAL DE BLOQUEIO */
+        /* MODAL */
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 9999; justify-content: center; align-items: center; }
         .modal-box { 
             background: #080808; border: 1px solid #222; width: 380px; padding: 30px; border-radius: 24px; 
@@ -47,7 +47,6 @@
 <body>
 
 <div class="logo">VELO<span>CITY</span></div>
-
 <div class="container-grid" id="grid"></div>
 
 <div id="modal">
@@ -55,15 +54,15 @@
         <img id="mImg" style="width:100%; height:140px; border-radius:12px; object-fit:cover; margin-bottom:20px;">
         <h2 id="mName" style="margin-bottom:25px; font-weight: 900;">PRODUCT</h2>
         
-        <a href="http://www.youtube.com/@Vortex-Ofc1" target="_blank" class="step-btn" id="yt" onclick="check('yt')">SUBSCRIBE ON YOUTUBE</a>
-        <a href="https://whatsapp.com/channel/0029VbC7FWcJENxsIOsndS15" target="_blank" class="step-btn" id="wa" onclick="check('wa')">JOIN WHATSAPP CHANNEL</a>
+        <a href="" target="_blank" class="step-btn" id="ytLink" onclick="check('yt')">SUBSCRIBE ON YOUTUBE</a>
+        <a href="" target="_blank" class="step-btn" id="waLink" onclick="check('wa')">JOIN WHATSAPP CHANNEL</a>
         
         <div id="status" style="display:none; color:var(--blue); font-weight:bold; margin:15px;">
             Liberando em <span id="timer">10</span>s...
         </div>
         
         <button id="dlBtn" class="download-now" disabled onclick="go()">DOWNLOAD NOW</button>
-        <p onclick="closeM()" style="color:#444; margin-top:20px; cursor:pointer; font-size:11px; letter-spacing:1px;">CANCEL / CLOSE</p>
+        <p onclick="closeM()" style="color:#444; margin-top:20px; cursor:pointer; font-size:11px;">CANCEL / CLOSE</p>
     </div>
 </div>
 
@@ -72,15 +71,17 @@
     const names = params.get('n')?.split('|') || [];
     const links = params.get('l')?.split('|') || [];
     const imgs = params.get('i')?.split('|') || [];
+    const ytLinks = params.get('yt')?.split('|') || [];
+    const waLinks = params.get('wa')?.split('|') || [];
 
     let currentLink = "";
     const grid = document.getElementById('grid');
 
     names.forEach((name, i) => {
-        if(name && name !== "Sem Nome") {
+        if(name) {
             const div = document.createElement('div');
             div.className = 'card';
-            div.onclick = () => openM(name, links[i], imgs[i]);
+            div.onclick = () => openM(name, links[i], imgs[i], ytLinks[i], waLinks[i]);
             div.innerHTML = `
                 <img src="${imgs[i] || 'https://via.placeholder.com/300x150'}">
                 <div class="card-body">
@@ -94,22 +95,23 @@
 
     let st = { yt: false, wa: false };
 
-    function openM(n, l, i) {
+    function openM(n, l, i, yt, wa) {
         currentLink = l;
         document.getElementById('mName').innerText = n;
         document.getElementById('mImg').src = i || '';
+        document.getElementById('ytLink').href = yt || 'https://youtube.com';
+        document.getElementById('waLink').href = wa || 'https://whatsapp.com';
         document.getElementById('modal').style.display = 'flex';
         st = { yt: false, wa: false };
-        document.getElementById('yt').className = 'step-btn';
-        document.getElementById('wa').className = 'step-btn';
+        document.getElementById('ytLink').className = 'step-btn';
+        document.getElementById('waLink').className = 'step-btn';
         document.getElementById('dlBtn').className = 'download-now';
         document.getElementById('dlBtn').disabled = true;
     }
 
     function check(type) {
         st[type] = true;
-        document.getElementById(type).classList.add('done');
-        document.getElementById(type).innerText = "COMPLETED ✅";
+        document.getElementById(type+'Link').classList.add('done');
         if(st.yt && st.wa) {
             let s = 10;
             document.getElementById('status').style.display = 'block';
