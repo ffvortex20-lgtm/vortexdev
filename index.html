@@ -2,34 +2,72 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velocity Clone - Custom</title>
+    <title>Velocity | Precision Tools</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <nav class="navbar">
-        <div class="logo">VELOCITY<span>.</span></div>
-        <div class="nav-links" id="tabs-container">
+    <header>
+        <nav class="navbar">
+            <div class="logo">VELOCITY</div>
+            <div class="tabs">
+                <button onclick="switchTab('software')" class="tab-btn active">Software</button>
+                <button onclick="switchTab('tools')" class="tab-btn">Tools</button>
+                <button onclick="switchTab('servers')" class="tab-btn">Servers</button>
             </div>
-        <button class="btn-discord">Discord</button>
-    </nav>
+            <button class="btn-discord">Discord</button>
+        </nav>
+    </header>
 
-    <main class="hero">
-        <h1 id="hero-title">Made with precision</h1>
-        <p id="hero-subtitle">Unmatched power and stability through cutting-edge game enhancement tools.</p>
-        <div class="actions">
-            <button class="btn-primary" onclick="scrollToProducts()">View Products</button>
-        </div>
-    </main>
+    <section class="hero-section">
+        <span class="badge">● LIVE PRODUCTS</span>
+        <h1>Made with precision</h1>
+        <p>Unmatched power and stability through cutting-edge game enhancement tools.</p>
+        <button class="btn-main" onclick="document.getElementById('products').scrollIntoView()">View Products</button>
+    </section>
 
-    <section class="products" id="products-section">
-        <h2 id="section-title">Products</h2>
-        <div class="products-grid" id="products-grid">
+    <section id="products" class="products-container">
+        <h2 class="section-title">Explore <span>Products</span></h2>
+        <div id="grid-produtos" class="grid">
             </div>
     </section>
 
-    <script src="script.js"></script>
+    <script>
+        // Simulando os dados que vieram do seu Painel Admin
+        const produtosConfigurados = [
+            { id: 1, cat: 'software', nome: 'Velocity Roblox Windows', desc: 'Experience unmatched power.', link: 'https://tinyurl.com/xyz123', status: 'download' },
+            { id: 2, cat: 'software', nome: 'Velocity CS2 Linux', desc: 'Coming soon for Linux users.', link: '#', status: 'soon' }
+        ];
+
+        function renderizar(categoria) {
+            const grid = document.getElementById('grid-produtos');
+            grid.innerHTML = '';
+            
+            const filtrados = produtosConfigurados.filter(p => p.cat === categoria);
+            
+            filtrados.forEach(p => {
+                grid.innerHTML += `
+                    <div class="card ${p.status === 'soon' ? 'coming-soon' : ''}">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3>${p.nome}</h3>
+                            <p>${p.desc}</p>
+                            <button class="btn-action" ${p.status === 'soon' ? 'disabled' : `onclick="window.open('${p.link}')"`}>
+                                ${p.status === 'soon' ? 'Coming Soon' : 'Download'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function switchTab(cat) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderizar(cat);
+        }
+
+        // Inicia na aba Software
+        renderizar('software');
+    </script>
 </body>
 </html>
