@@ -2,73 +2,80 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>VORTEX | Gerador de Múltiplos Botões</title>
+    <title>VORTEX | Gerador com Upload</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --blue: #00a2ff; --card: #111; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; padding: 20px; display: flex; justify-content: center; }
-        .admin-box { background: var(--card); border: 1px solid #222; padding: 30px; border-radius: 20px; width: 500px; box-shadow: 0 0 30px rgba(0,162,255,0.1); }
-        .input-item { background: #000; padding: 15px; border-radius: 10px; border: 1px solid #333; margin-bottom: 10px; position: relative; }
-        input { width: 100%; padding: 10px; margin: 5px 0; background: #111; border: 1px solid #222; color: white; border-radius: 5px; box-sizing: border-box; }
-        .btn-add { background: #222; color: var(--blue); border: 1px solid var(--blue); width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; }
-        #result { margin-top: 20px; display: none; }
-        textarea { width: 100%; height: 70px; background: #000; color: #25D366; border: 1px dashed #25D366; padding: 10px; border-radius: 5px; resize: none; font-size: 11px; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .admin-box { background: var(--card); border: 1px solid #222; padding: 30px; border-radius: 20px; width: 100%; max-width: 550px; box-shadow: 0 0 30px rgba(0,162,255,0.1); }
+        .prod-input { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; background: #111; border: 1px solid #222; color: white; border-radius: 8px; box-sizing: border-box; }
+        .btn-add { background: none; color: var(--blue); border: 2px dashed var(--blue); width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 15px; }
+        .btn-gen { background: var(--blue); color: white; border: none; width: 100%; padding: 18px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 16px; }
+        #output-area { margin-top: 25px; display: none; width: 100%; max-width: 550px; }
+        textarea { width: 100%; height: 80px; background: #000; color: #25D366; border: 1px dashed #25D366; padding: 10px; border-radius: 8px; resize: none; word-break: break-all; font-size: 10px; }
     </style>
 </head>
 <body>
 
 <div class="admin-box">
-    <h2 style="text-align:center; margin-bottom:20px;">VORTEX <span>DASHBOARD</span></h2>
-    
-    <div id="buttons-list">
-        </div>
+    <h2 style="text-align:center; margin-bottom:20px;">VORTEX <span>STUDIO</span></h2>
+    <div id="lista-produtos"></div>
+    <button class="btn-add" onclick="novoProduto()">+ ADICIONAR PRODUTO (Máx 15)</button>
+    <button class="btn-gen" onclick="gerarTudo()">GERAR PÁGINA VELOCITY</button>
+</div>
 
-    <button class="btn-add" onclick="addButton()">+ ADICIONAR BOTÃO (Máx 15)</button>
-    <button class="btn-gen" onclick="generateAll()">GERAR PÁGINA COM TODOS BOTÕES</button>
-
-    <div id="result">
-        <label style="font-size: 11px; color: #888;">LINK DA PÁGINA (TINYURL):</label>
-        <textarea id="finalLink" readonly></textarea>
-        <button class="btn-gen" style="background:#222; margin-top:5px;" onclick="copy()">COPIAR LINK</button>
-    </div>
+<div id="output-area">
+    <label style="color:var(--blue); font-size:12px;">LINK PARA DIVULGAR:</label>
+    <textarea id="resLink" readonly></textarea>
+    <button class="btn-gen" style="background:#222; margin-top:10px; font-size:12px; padding:10px;" onclick="copy()">COPIAR LINK</button>
 </div>
 
 <script>
-    let count = 0;
-    function addButton() {
-        if(count >= 15) return alert("Limite de 15 botões atingido!");
-        count++;
+    let qtd = 0;
+    function novoProduto() {
+        if(qtd >= 15) return alert("Limite atingido!");
+        qtd++;
         const div = document.createElement('div');
-        div.className = 'input-item';
+        div.className = 'prod-input';
         div.innerHTML = `
-            <label style="font-size:10px; color:var(--blue)">BOTÃO ${count}</label>
-            <input type="text" class="pName" placeholder="Nome do Software">
-            <input type="text" class="pUrl" placeholder="Link de Download">
+            <small style="color:var(--blue)">PRODUTO #${qtd}</small>
+            <input type="text" class="pNome" placeholder="Nome do Produto">
+            <input type="file" class="pArq" accept="image/*" onchange="preview(this)">
+            <input type="hidden" class="pImgBase">
+            <input type="text" class="pLink" placeholder="Link de Download">
         `;
-        document.getElementById('buttons-list').appendChild(div);
+        document.getElementById('lista-produtos').appendChild(div);
     }
 
-    async function generateAll() {
-        const names = Array.from(document.querySelectorAll('.pName')).map(i => i.value).join('|');
-        const urls = Array.from(document.querySelectorAll('.pUrl')).map(i => i.value).join('|');
-        
+    function preview(input) {
+        const reader = new FileReader();
+        reader.onload = (e) => { input.nextElementSibling.value = e.target.result; };
+        if(input.files[0]) reader.readAsDataURL(input.files[0]);
+    }
+
+    async function gerarTudo() {
+        const names = Array.from(document.querySelectorAll('.pNome')).map(i => i.value || "Sem Nome").join('|');
+        const links = Array.from(document.querySelectorAll('.pLink')).map(i => i.value || "#").join('|');
+        // Usamos uma versão encurtada do Base64 ou o link original para não travar a URL
+        const imgs = Array.from(document.querySelectorAll('.pImgBase')).map(i => i.value || "").join('|');
+
         let base = window.location.href.replace('index.html', 'v.html');
         if(!base.includes('v.html')) base += 'v.html';
         
-        const longUrl = `${base}?names=${encodeURIComponent(names)}&urls=${encodeURIComponent(urls)}`;
+        // Criando o link mestre (Atenção: URLs muito longas podem falhar em alguns navegadores, por isso o Base64 deve ser leve)
+        const longUrl = `${base}?n=${encodeURIComponent(names)}&l=${encodeURIComponent(links)}&i=${encodeURIComponent(imgs)}`;
 
-        const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-        const short = await res.text();
-        
-        document.getElementById('finalLink').value = short;
-        document.getElementById('result').style.display = 'block';
+        try {
+            const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+            const short = await res.text();
+            document.getElementById('resLink').value = short;
+            document.getElementById('output-area').style.display = 'block';
+        } catch(e) { alert("Erro ao encurtar. A imagem pode ser muito pesada!"); }
     }
 
-    function copy() { document.getElementById('finalLink').select(); document.execCommand('copy'); alert("Copiado!"); }
-    
-    // Inicia com 1
-    addButton();
+    function copy() { document.getElementById('resLink').select(); document.execCommand('copy'); alert("Copiado!"); }
+    novoProduto();
 </script>
 </body>
 </html>
