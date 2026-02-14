@@ -2,145 +2,133 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Velocity | Access Panel</title>
+    <title>Velocity | Access</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050505; --blue: #00a2ff; --card: #0c0c0c; }
+        :root { --bg: #050505; --blue: #00a2ff; --glow: rgba(0, 162, 255, 0.6); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        body { background: var(--bg); color: white; background-image: radial-gradient(circle at top, #0a1a2f 0%, #050505 100%); min-height: 100vh; padding: 40px; }
 
-        .logo { font-weight: 900; font-size: 2rem; margin-bottom: 50px; letter-spacing: 2px; }
-        .logo span { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
-
-        .container-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; }
-
-        .card { 
-            background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; overflow: hidden; 
-            transition: 0.4s ease; border-top: 3px solid var(--blue); cursor: pointer;
-            animation: fadeIn 0.6s ease forwards; opacity: 0;
+        /* Botões com Som e Brilho */
+        .step-btn { 
+            display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; 
+            text-decoration: none; color: white; font-weight: bold; background: #111; 
+            border: 1px solid #333; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;
         }
-        @keyframes fadeIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-        .card:hover { transform: translateY(-8px); border-color: var(--blue); box-shadow: 0 10px 30px rgba(0,162,255,0.2); }
-        .card .media-box { width: 100%; height: 150px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-body { padding: 20px; text-align: center; }
-        .btn-access { background: #fff; color: #000; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: 900; margin-top: 10px; text-transform: uppercase; font-size: 11px; }
-
-        /* MODAL */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); backdrop-filter: blur(10px); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-box { 
-            background: #080808; border: 1px solid #222; width: 420px; padding: 30px; border-radius: 28px; 
-            text-align: center; border-top: 4px solid var(--blue); animation: scaleUp 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28);
-        }
-        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        #mMediaContainer { width: 100%; border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #222; height: 200px; }
-        #mMediaContainer iframe, #mMediaContainer img { width: 100%; height: 100%; object-fit: cover; border: none; }
-
-        .step-btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border-radius: 12px; text-decoration: none; color: white; font-weight: bold; background: #111; border: 1px solid #333; transition: 0.3s; font-size: 13px; }
-        .step-btn.done { border-color: #25D366; color: #25D366; background: rgba(37, 211, 102, 0.05); }
+        .step-btn:hover { border-color: var(--blue); box-shadow: 0 0 20px var(--glow); transform: translateY(-3px); }
+        .step-btn:active { transform: scale(0.95); }
+        .step-btn.done { border-color: #25D366 !important; color: #25D366; }
 
         .download-now { 
             width: 100%; padding: 20px; border-radius: 12px; border: none; background: #222; 
-            color: #444; font-weight: 900; margin-top: 15px; cursor: not-allowed; text-transform: uppercase; transition: 0.4s;
+            color: #444; font-weight: 900; cursor: not-allowed; transition: 0.4s;
         }
-        .download-now.active { background: #fff; color: #000; cursor: pointer; box-shadow: 0 0 20px #fff; }
+        .download-now.active { 
+            background: var(--blue); color: white; cursor: pointer; 
+            box-shadow: 0 0 25px var(--blue); animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+        .container-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto; }
+        .card { background: #0c0c0c; border: 1px solid #1a1a1a; border-radius: 20px; overflow: hidden; border-top: 3px solid var(--blue); cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px var(--glow); }
+
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-box { background: #080808; border: 1px solid #222; width: 400px; padding: 30px; border-radius: 25px; text-align: center; border-top: 4px solid var(--blue); }
+        #mMedia { width: 100%; height: 200px; border-radius: 15px; overflow: hidden; margin-bottom: 20px; background: #000; }
+        iframe, img { width: 100%; height: 100%; object-fit: cover; border: none; }
     </style>
 </head>
 <body>
 
-<div class="logo">VELO<span>CITY</span></div>
+<h1 style="text-align:center; margin-bottom:50px; font-weight:900;">VELO<span style="color:var(--blue)">CITY</span></h1>
 <div class="container-grid" id="grid"></div>
 
 <div id="modal">
     <div class="modal-box">
-        <div id="mMediaContainer"></div>
-        <h2 id="mName" style="margin-bottom:20px; font-weight: 900;">PRODUCT</h2>
-        
-        <a href="" target="_blank" class="step-btn" id="ytLink" onclick="check('yt')">SUBSCRIBE ON YOUTUBE</a>
-        <a href="" target="_blank" class="step-btn" id="waLink" onclick="check('wa')">JOIN WHATSAPP CHANNEL</a>
-        
-        <div id="status" style="display:none; color:var(--blue); font-weight:bold; margin-bottom:15px; font-size: 13px;">
-            UNLOCKING IN <span id="timer">10</span>s...
-        </div>
-        
-        <button id="dlBtn" class="download-now" disabled onclick="go()">DOWNLOAD NOW</button>
-        <p onclick="closeM()" style="color:#555; margin-top:20px; cursor:pointer; font-size:10px; font-weight:900;">CLOSE</p>
+        <div id="mMedia"></div>
+        <h2 id="mName" style="margin-bottom:20px;">PRODUTO</h2>
+        <a href="" target="_blank" class="step-btn" id="ytL" onclick="checkAct('yt')">SUBSCRIBE ON YOUTUBE</a>
+        <a href="" target="_blank" class="step-btn" id="waL" onclick="checkAct('wa')">JOIN WHATSAPP</a>
+        <div id="timerDiv" style="display:none; color:var(--blue); margin:15px; font-weight:bold;">UNLOCKING IN <span id="sec">10</span>s...</div>
+        <button id="dlB" class="download-now" disabled onclick="downloadGo()">DOWNLOAD NOW</button>
+        <p onclick="closeM()" style="margin-top:20px; color:#555; cursor:pointer; font-size:12px; font-weight:bold;">[ CANCEL ]</p>
     </div>
 </div>
 
+<script async defer src="//assets.pinterest.com/js/pinit.js"></script>
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const names = params.get('n')?.split('|') || [];
-    const links = params.get('l')?.split('|') || [];
-    const media = params.get('i')?.split('|') || [];
-    const ytUrls = params.get('yt')?.split('|') || [];
-    const waUrls = params.get('wa')?.split('|') || [];
+    // Config Som
+    const clickSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+    const unlockSfx = new Audio('https://www.soundjay.com/communication/sounds/digital-beep-01.mp3');
+    function playClick() { clickSfx.currentTime = 0; clickSfx.play(); }
 
-    let currentDl = "";
-    const grid = document.getElementById('grid');
+    const p = new URLSearchParams(window.location.search);
+    const names = p.get('n')?.split('|') || [];
+    const links = p.get('l')?.split('|') || [];
+    const media = p.get('i')?.split('|') || [];
+    const ytUs = p.get('yt')?.split('|') || [];
+    const waUs = p.get('wa')?.split('|') || [];
+
+    let currentL = "";
 
     function getMediaHtml(url) {
-        if(url.includes('youtube.com/watch') || url.includes('youtu.be')) {
-            let id = url.includes('watch?v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
+        if(url.includes('youtube.com') || url.includes('youtu.be')) {
+            let id = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
             return `<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>`;
         }
-        return `<img src="${url || 'https://via.placeholder.com/300x150/111/fff?text=VORTEX'}">`;
+        if(url.includes('pinterest.com') || url.includes('pin.it')) {
+            return `<div style="background:#fff; height:100%; display:flex; align-items:center; justify-content:center;"><a data-pin-do="embedPin" href="${url}"></a></div>`;
+        }
+        return `<img src="${url || 'https://via.placeholder.com/300x150'}">`;
     }
 
-    names.forEach((name, i) => {
-        if(name) {
-            const div = document.createElement('div');
-            div.className = 'card';
-            div.onclick = () => openM(name, links[i], media[i], ytUrls[i], waUrls[i]);
-            div.innerHTML = `
-                <div class="media-box">${getMediaHtml(media[i])}</div>
-                <div class="card-body">
-                    <h3>${name}</h3>
-                    <button class="btn-access">ACCESS</button>
-                </div>
-            `;
-            grid.appendChild(div);
-        }
+    names.forEach((n, i) => {
+        if(!n) return;
+        const d = document.createElement('div');
+        d.className = 'card';
+        d.onclick = () => { playClick(); openM(n, links[i], media[i], ytUs[i], waUs[i]); };
+        d.innerHTML = `<div style="height:150px;">${getMediaHtml(media[i])}</div><div style="padding:20px;text-align:center;"><h3>${n}</h3></div>`;
+        document.getElementById('grid').appendChild(d);
     });
 
     let st = { yt: false, wa: false };
-
     function openM(n, l, m, yt, wa) {
-        currentDl = l;
+        currentL = l;
         document.getElementById('mName').innerText = n;
-        document.getElementById('mMediaContainer').innerHTML = getMediaHtml(m);
-        document.getElementById('ytLink').href = yt || '#';
-        document.getElementById('waLink').href = wa || '#';
+        document.getElementById('mMedia').innerHTML = getMediaHtml(m);
+        if(window.PinUtils) window.PinUtils.build();
+        document.getElementById('ytL').href = yt;
+        document.getElementById('waL').href = wa;
         document.getElementById('modal').style.display = 'flex';
         st = { yt: false, wa: false };
-        document.getElementById('ytLink').className = 'step-btn';
-        document.getElementById('waLink').className = 'step-btn';
-        document.getElementById('status').style.display = 'none';
-        document.getElementById('dlBtn').className = 'download-now';
-        document.getElementById('dlBtn').disabled = true;
+        document.getElementById('dlB').className = 'download-now';
+        document.getElementById('timerDiv').style.display = 'none';
+        document.getElementById('ytL').className = 'step-btn';
+        document.getElementById('waL').className = 'step-btn';
     }
 
-    function check(type) {
+    function checkAct(type) {
+        playClick();
         st[type] = true;
-        document.getElementById(type+'Link').classList.add('done');
+        document.getElementById(type + 'L').classList.add('done');
         if(st.yt && st.wa) {
+            document.getElementById('timerDiv').style.display = 'block';
             let s = 10;
-            document.getElementById('status').style.display = 'block';
-            const counter = setInterval(() => {
-                s--; document.getElementById('timer').innerText = s;
+            const t = setInterval(() => {
+                s--; document.getElementById('sec').innerText = s;
                 if(s <= 0) {
-                    clearInterval(counter);
-                    document.getElementById('status').innerText = "UNLOCKED!";
-                    const b = document.getElementById('dlBtn');
-                    b.disabled = false; b.classList.add('active');
+                    clearInterval(t);
+                    unlockSfx.play();
+                    document.getElementById('dlB').className = 'download-now active';
+                    document.getElementById('dlB').disabled = false;
                 }
             }, 1000);
         }
     }
 
-    function closeM() { document.getElementById('modal').style.display = 'none'; document.getElementById('mMediaContainer').innerHTML = ""; }
-    function go() { window.location.href = currentDl; }
+    function closeM() { playClick(); document.getElementById('modal').style.display = 'none'; }
+    function downloadGo() { playClick(); window.location.href = currentL; }
 </script>
 </body>
 </html>
